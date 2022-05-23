@@ -1,89 +1,70 @@
-/*Manipular datas em JavaScript*/
+/** Json **
 
-//comando base para pegar a data
-let data = new Date();
-console.log(data);
+Json siginifica JavaScript Object Notation que traduzido fica algo como notação de objeto JavaScript.
 
-// pegar o ano atual com 4 digitos
-let ano = data.getFullYear();
-console.log(ano);
+Explicndo de um modo simples Json é basicamente uma forma de converter um objeto em texto e contrario tambem, um texto em um objeto.
 
-// pegar o mes atual de 0 ate 11
-let mes = data.getMonth();
-//console.log(mes);
+Ele é usado principalmente para transmitir dados entre sistemas de forma simples, já que o formato de texto é lido por praticamente toda linguagem de programação.
 
-//mostrar o mes no formato escrito
-const mesesDoAno=["Janeiro","Fevereiro", "Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-let mesEscrito = mesesDoAno[data.getMonth()];
-console.log(mesEscrito);
+Para trabalhar com Json no JavaScript usamos dois métodos;
 
-//pegar dia do mes 1 até 31
-let diaMes = data.getDate();
-console.log(diaMes);
+Json.parse() -> converte texto no padrao Json em objetos
+Json.stringify() -> converte objetos em texto padrao JSON
+*/
 
-//mostrar o dia da semana 0 - 6
-let diaSemana = data.getDay();
-//console.log(diaSemana);
-const diasDaSemana = ['domingo','segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sabado'];
-let diaEscrito = diasDaSemana[data.getDay()];
-console.log(diaEscrito);
+//objeto CARRO
+/*
+const carro = {
+    marca : ' fiat ',
+    modelo :' Uno ',
+    ano : 2018,
+    motor: ['1.0','1.4','1.6']
+}
+//covertendo para texto
+let texto = JSON.stringify(carro);
+//exibindo
+document.getElementById('area').innerHTML = texto;
 
-//pegar a hora 0 - 23hs
-let hora = data.getHours();
-console.log(hora);
+//convertendo para objeto
+let obj = JSON.parse(texto);
+console.log(obj.modelo);
 
-//pegar os minutos 0 - 59min
-let minutos = data.getMinutes();
-console.log(minutos);
+//pegamos um valor desde objeto
+console.log(obj.motor[2]);
+*/
 
-//pegar os segundos 0 - 59min
-let segundos = data.getSeconds();
-console.log(segundos);
 
-//pegar os milisegundos 0 - 999mil
-let milisegundos = data.getMilliseconds();
-console.log(milisegundos);
 
-//pegar data padrao brasileiro
-let dataBr = data.toLocaleString('pt-BR');
-console.log(dataBr);
+//site viacep
+/*
+const ajax = new XMLHttpRequest();
+ajax.open('GET', 'https://viacep.com.br/ws/85802000/json/');
+ajax.send();
 
-//mostra só a data
-let dataBrr = data.toLocaleDateString('pt-BR',{dateStyle: 'short'});
-console.log(dataBrr);
+ajax.onload = function(){
+    document.getElementById('area').innerHTML= this.responseText;
+    let obj = JSON.parse(this.responseText);
+    alert(obj.ddd);
+}
+*/
 
-//mostra só a hora
-let dataBrrr = data.toLocaleString('pt-BR',{timeStyle: 'short'});
-console.log(dataBrrr);
+function buscarCep(){
+    let input = document.getElementById('cep').value;
 
-//pegar os valores separados manualmente
-d = new Date();
-diaMes = d.getDate();
-mes = d.getMonth();
-ano = d.getFullYear();
+    const ajax = new XMLHttpRequest();
+    ajax.open('GET', 'https://viacep.com.br/ws/' + input + '/json/');
+    ajax.send();
 
-function addZero(x){return x < 10 ? '0' + x : '' + x;};
-
-let dataPadBR = addZero(diaMes) + '/' + addZero(mes) + '/' + ano;
-console.log(dataPadBR);
-
-//comparar data maior ou menor ex: vencimentos
-let hoje = new Date();
-let vencimento = new Date(2023, 0, 15);
-
-if(hoje > vencimento){
-    console.log('Sua conta está vencida');
-}else{
-    console.log('Ainda não venceu tudo certo!')
+    ajax.onload = function(){
+       // document.getElementById('texto').innerHTML = this.responseText;
+        //transformou texto em objeto
+        let obj = JSON.parse(this.responseText);
+        //pegou valores desejados
+        let logradouro = obj.logradouro;
+        let  cidade = obj.localidade;
+        let estado = obj.uf;
+        document.getElementById('texto').innerHTML = 'Logradouro: ' + logradouro + '<br> Cidade: ' + cidade+ '<br> Estado:' + estado;
 }
 
-//diferenca entre duas datas
-let dataInicial = new Date();
-let dataFinal = new Date(2022,11,31);
+}
 
-//PRECISA POR GETTIME PRA CALCULO
-let diferencaTempo = dataFinal.getTime() - dataInicial.getTime();
-
-let diferencaDias = Math.ceil(diferencaTempo / (24 * 60 * 60 *1000));
-
-console.log(diferencaDias + ' dias para acabar o ano');
